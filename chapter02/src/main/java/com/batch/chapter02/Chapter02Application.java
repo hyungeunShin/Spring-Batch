@@ -6,6 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Chapter02Application {
 	public static void main(String[] args) {
-		SpringApplication.run(Chapter02Application.class, args);
+        System.exit(SpringApplication.exit(SpringApplication.run(Chapter02Application.class, args)));
 	}
 }

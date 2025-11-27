@@ -1,6 +1,5 @@
-package com.batch.chapter02.config;
+package com.batch.chapter02.tasklet;
 
-import com.batch.chapter02.tasklet.TestTasklet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

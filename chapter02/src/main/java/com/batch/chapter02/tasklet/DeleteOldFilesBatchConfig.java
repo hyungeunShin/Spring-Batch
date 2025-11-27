@@ -1,6 +1,5 @@
-package com.batch.chapter02.config;
+package com.batch.chapter02.tasklet;
 
-import com.batch.chapter02.tasklet.DeleteOldFilesTasklet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -53,7 +52,7 @@ public class DeleteOldFilesBatchConfig {
     public Step deleteOldRecordsStep() {
         return new StepBuilder("deleteOldRecordsStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    int deleted = jdbcTemplate.update("DELETE FROM LOGS WHERE CREATED < NOW() - INTERVAL 7 DAY");
+                    int deleted = jdbcTemplate.update("DELETE FROM LOGS WHERE CREATED < CURRENT_TIMESTAMP - INTERVAL '7' DAY");
                     log.info("삭제된 행 개수: {}", deleted);
                     return RepeatStatus.FINISHED;
                 }, transactionManager)

@@ -1,8 +1,5 @@
-package com.batch.chapter02.config;
+package com.batch.chapter02.chunk;
 
-import com.batch.chapter02.chunk.TestItemProcessor;
-import com.batch.chapter02.chunk.TestItemReader;
-import com.batch.chapter02.chunk.TestItemWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
