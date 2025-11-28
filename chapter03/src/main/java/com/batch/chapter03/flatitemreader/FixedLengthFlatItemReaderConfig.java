@@ -30,23 +30,23 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class FixedLengthSystemFailureBatchConfig {
+public class FixedLengthFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job fixedLengthSystemFailureJob(Step fixedLengthSystemFailureStep) {
-        return new JobBuilder("fixedLengthSystemFailureJob", jobRepository)
-                .start(fixedLengthSystemFailureStep)
+    public Job fixedLengthFlatItemReaderJob(Step fixedLengthFlatItemReaderStep) {
+        return new JobBuilder("fixedLengthFlatItemReaderJob", jobRepository)
+                .start(fixedLengthFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step fixedLengthSystemFailureStep(FlatFileItemReader<SystemFailure> fixedLengthSystemFailureItemReader, ItemWriter<SystemFailure> fixedLengthSystemFailureItemWriter) {
-        return new StepBuilder("fixedLengthSystemFailureStep", jobRepository)
+    public Step fixedLengthFlatItemReaderStep(FlatFileItemReader<SystemFailure> fixedLengthFlatItemReader) {
+        return new StepBuilder("fixedLengthFlatItemReaderStep", jobRepository)
                 .<SystemFailure, SystemFailure>chunk(10, transactionManager)
-                .reader(fixedLengthSystemFailureItemReader)
-                .writer(fixedLengthSystemFailureItemWriter)
+                .reader(fixedLengthFlatItemReader)
+                .writer(fixedLengthFlatItemWriter())
                 .build();
     }
 
@@ -71,7 +71,7 @@ public class FixedLengthSystemFailureBatchConfig {
     */
     @Bean
     @StepScope
-    public FlatFileItemReader<SystemFailure> fixedLengthSystemFailureItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemReader<SystemFailure> fixedLengthFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         return new FlatFileItemReaderBuilder<SystemFailure>()
                 .name("fixedLengthSystemFailureItemReader")
                 .resource(new FileSystemResource(filePath))
@@ -99,8 +99,7 @@ public class FixedLengthSystemFailureBatchConfig {
         };
     }
 
-    @Bean
-    public ItemWriter<SystemFailure> fixedLengthSystemFailureItemWriter() {
+    public ItemWriter<SystemFailure> fixedLengthFlatItemWriter() {
         return chunk -> chunk.forEach(item -> log.info("{}", item));
     }
 

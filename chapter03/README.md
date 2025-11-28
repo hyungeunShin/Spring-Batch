@@ -9,7 +9,7 @@ ERR003,2025-01-03 10:03:04,FATAL,1235,MEMORY_OVERFLOW
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=delimiterSystemFailureJob filePath=C:/테스트/1.csv'
+./gradlew bootRun --args='--spring.batch.job.name=delimiterFlatItemReaderJob filePath=C:/테스트/1.csv'
 ```
 
 ---
@@ -22,7 +22,7 @@ ERR002  2025-01-19 10:15:25  FATAL     1235  MEMORY  OVERFLOW FAIL
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=fixedLengthSystemFailureJob filePath=C:/테스트/2.txt'
+./gradlew bootRun --args='--spring.batch.job.name=fixedLengthFlatItemReaderJob filePath=C:/테스트/2.txt'
 ```
 
 ---
@@ -36,7 +36,7 @@ ERR002  2025-01-19 10:15:25  FATAL     1235  MEMORY  OVERFLOW FAIL
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=regexLogJob filePath=C:/테스트/3.txt'
+./gradlew bootRun --args='--spring.batch.job.name=regexFlatItemReaderJob filePath=C:/테스트/3.txt'
 ```
 
 ---
@@ -52,7 +52,7 @@ ABORT,zombie-process,Deadlock,2025-01-24T13:46:20,kill -9 executed,-1,/proc/dead
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=patternMatchingLogJob filePath=C:/테스트/4.log'
+./gradlew bootRun --args='--spring.batch.job.name=patternMatchingFlatItemReaderJob filePath=C:/테스트/4.log'
 ```
 
 ---
@@ -67,7 +67,7 @@ collapse,95,disk burnout
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=recordJob filePath=C:/테스트/5.txt'
+./gradlew bootRun --args='--spring.batch.job.name=recordFlatItemReaderJob filePath=C:/테스트/5.txt'
 ```
 
 ---
@@ -89,5 +89,29 @@ ERR103,2025-01-19 10:22:45,WARN,2003,SLOW_QUERY_DETECTED
 ```
 
 ```shell
-./gradlew bootRun --args='--spring.batch.job.name=multiResourceJob filePath=C:/테스트/multi'
+./gradlew bootRun --args='--spring.batch.job.name=multiResourceFlatItemReaderJob filePath=C:/테스트/multi'
+```
+
+---
+
+## DelimiterFlatItemWriterConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=delimiterFlatItemWriterJob filePath=C:/테스트'
+```
+
+---
+
+## RecordFlatItemWriterConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=recordFlatItemWriterJob filePath=C:/테스트'
+```
+
+---
+
+## CustomFormatFlatItemWriterConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=customFormatFlatItemWriterJob filePath=C:/테스트'
 ```

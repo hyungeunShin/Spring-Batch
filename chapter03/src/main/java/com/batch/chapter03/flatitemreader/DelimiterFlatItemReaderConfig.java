@@ -23,23 +23,23 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class DelimiterSystemFailureBatchConfig {
+public class DelimiterFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job delimiterSystemFailureJob(Step delimiterSystemFailureStep) {
-        return new JobBuilder("delimiterSystemFailureJob", jobRepository)
-                .start(delimiterSystemFailureStep)
+    public Job delimiterFlatItemReaderJob(Step delimiterFlatItemReaderStep) {
+        return new JobBuilder("delimiterFlatItemReaderJob", jobRepository)
+                .start(delimiterFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step delimiterSystemFailureStep(FlatFileItemReader<SystemFailure> delimiterSystemFailureItemReader, ItemWriter<SystemFailure> delimiterSystemFailureItemWriter) {
-        return new StepBuilder("delimiterSystemFailureStep", jobRepository)
+    public Step delimiterFlatItemReaderStep(FlatFileItemReader<SystemFailure> delimiterFlatItemReader) {
+        return new StepBuilder("delimiterFlatItemReaderStep", jobRepository)
                 .<SystemFailure, SystemFailure>chunk(10, transactionManager)
-                .reader(delimiterSystemFailureItemReader)
-                .writer(delimiterSystemFailureItemWriter)
+                .reader(delimiterFlatItemReader)
+                .writer(delimiterFlatItemReader())
                 .build();
     }
 
@@ -85,9 +85,9 @@ public class DelimiterSystemFailureBatchConfig {
     */
     @Bean
     @StepScope
-    public FlatFileItemReader<SystemFailure> delimiterSystemFailureItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemReader<SystemFailure> delimiterFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         return new FlatFileItemReaderBuilder<SystemFailure>()
-                .name("delimiterSystemFailureItemReader")
+                .name("delimiterFlatItemReader")
                 .resource(new FileSystemResource(filePath))
                 .delimited()
                 .delimiter(",")
@@ -97,8 +97,7 @@ public class DelimiterSystemFailureBatchConfig {
                 .build();
     }
 
-    @Bean
-    public ItemWriter<SystemFailure> delimiterSystemFailureItemWriter() {
+    public ItemWriter<SystemFailure> delimiterFlatItemReader() {
         return chunk -> chunk.forEach(item -> log.info("{}", item));
     }
 

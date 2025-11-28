@@ -32,29 +32,29 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class PatternMatchingLogBatchConfig {
+public class PatternMatchingFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job patternMatchingLogJob(Step patternMatchingLogStep) {
-        return new JobBuilder("patternMatchingLogJob", jobRepository)
-                .start(patternMatchingLogStep)
+    public Job patternMatchingFlatItemReaderJob(Step patternMatchingFlatItemReaderStep) {
+        return new JobBuilder("patternMatchingFlatItemReaderJob", jobRepository)
+                .start(patternMatchingFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step patternMatchingLogStep(FlatFileItemReader<SystemLog> patternMatchingLogItemReader, ItemWriter<SystemLog> patternMatchingLogItemWriter) {
-        return new StepBuilder("patternMatchingLogStep", jobRepository)
+    public Step patternMatchingFlatItemReaderStep(FlatFileItemReader<SystemLog> patternMatchingFlatItemReader) {
+        return new StepBuilder("patternMatchingFlatItemReaderStep", jobRepository)
                 .<SystemLog, SystemLog>chunk(10, transactionManager)
-                .reader(patternMatchingLogItemReader)
-                .writer(patternMatchingLogItemWriter)
+                .reader(patternMatchingFlatItemReader)
+                .writer(patternMatchingFlatItemWriter())
                 .build();
     }
 
     @Bean
     @StepScope
-    public FlatFileItemReader<SystemLog> patternMatchingLogItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemReader<SystemLog> patternMatchingFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         return new FlatFileItemReaderBuilder<SystemLog>()
                 .name("logItemReader")
                 .resource(new FileSystemResource(filePath))
@@ -99,8 +99,7 @@ public class PatternMatchingLogBatchConfig {
         return tokenizer;
     }
 
-    @Bean
-    public ItemWriter<SystemLog> patternMatchingLogItemWriter() {
+    public ItemWriter<SystemLog> patternMatchingFlatItemWriter() {
         return chunk -> chunk.forEach(item -> log.info("{}", item));
     }
 

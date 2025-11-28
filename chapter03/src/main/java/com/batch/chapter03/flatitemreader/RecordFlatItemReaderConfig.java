@@ -20,23 +20,23 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class RecordBatchConfig {
+public class RecordFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job recordJob(Step recordStep) {
-        return new JobBuilder("recordJob", jobRepository)
-                .start(recordStep)
+    public Job recordFlatItemReaderJob(Step recordFlatItemReaderStep) {
+        return new JobBuilder("recordFlatItemReaderJob", jobRepository)
+                .start(recordFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step recordStep(FlatFileItemReader<System> recordItemReader, ItemWriter<System> recordItemWriter) {
-        return new StepBuilder("recordStep", jobRepository)
+    public Step recordFlatItemReaderStep(FlatFileItemReader<System> recordFlatItemReader) {
+        return new StepBuilder("recordFlatItemReaderStep", jobRepository)
                 .<System, System>chunk(10, transactionManager)
-                .reader(recordItemReader)
-                .writer(recordItemWriter)
+                .reader(recordFlatItemReader)
+                .writer(recordFlatItemWriter())
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class RecordBatchConfig {
     */
     @Bean
     @StepScope
-    public FlatFileItemReader<System> recordItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemReader<System> recordFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         return new FlatFileItemReaderBuilder<System>()
                 .name("recordItemReader")
                 .resource(new FileSystemResource(filePath))
@@ -57,8 +57,7 @@ public class RecordBatchConfig {
                 .build();
     }
 
-    @Bean
-    public ItemWriter<System> recordItemWriter() {
+    public ItemWriter<System> recordFlatItemWriter() {
         return chunk -> chunk.forEach(item -> log.info("{}", item));
     }
 

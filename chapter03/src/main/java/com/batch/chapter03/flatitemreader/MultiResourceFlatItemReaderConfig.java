@@ -26,29 +26,29 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class MultiResourceBatchConfig {
+public class MultiResourceFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job multiResourceJob(Step multiResourceStep) {
-        return new JobBuilder("multiResourceJob", jobRepository)
-                .start(multiResourceStep)
+    public Job multiResourceFlatItemReaderJob(Step multiResourceFlatItemReaderStep) {
+        return new JobBuilder("multiResourceFlatItemReaderJob", jobRepository)
+                .start(multiResourceFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step multiResourceStep(MultiResourceItemReader<SystemFailure> multiResourceItemReader, ItemWriter<SystemFailure> multiResourceItemWriter) {
-        return new StepBuilder("multiResourceStep", jobRepository)
+    public Step multiResourceFlatItemReaderStep(MultiResourceItemReader<SystemFailure> multiResourceFlatItemReader) {
+        return new StepBuilder("multiResourceFlatItemReaderStep", jobRepository)
                 .<SystemFailure, SystemFailure>chunk(10, transactionManager)
-                .reader(multiResourceItemReader)
-                .writer(multiResourceItemWriter)
+                .reader(multiResourceFlatItemReader)
+                .writer(multiResourceFlatItemWriter())
                 .build();
     }
 
     @Bean
     @StepScope
-    public MultiResourceItemReader<SystemFailure> multiResourceItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public MultiResourceItemReader<SystemFailure> multiResourceFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         log.info("{}", filePath + "/6.csv");
         log.info("{}", filePath + "/7.csv");
         return new MultiResourceItemReaderBuilder<SystemFailure>()
@@ -72,8 +72,7 @@ public class MultiResourceBatchConfig {
                 .build();
     }
 
-    @Bean
-    public ItemWriter<SystemFailure> multiResourceItemWriter() {
+    public ItemWriter<SystemFailure> multiResourceFlatItemWriter() {
         return chunk -> chunk.forEach(item -> log.info("{}", item));
     }
 

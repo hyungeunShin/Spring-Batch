@@ -21,29 +21,29 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class RegexLogBatchConfig {
+public class RegexFlatItemReaderConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job regexLogJob(Step regexLogStep) {
-        return new JobBuilder("regexLogJob", jobRepository)
-                .start(regexLogStep)
+    public Job regexFlatItemReaderJob(Step regexFlatItemReaderStep) {
+        return new JobBuilder("regexFlatItemReaderJob", jobRepository)
+                .start(regexFlatItemReaderStep)
                 .build();
     }
 
     @Bean
-    public Step regexLogStep(FlatFileItemReader<LogEntry> regexLogItemReader, ItemWriter<LogEntry> regexLogItemWriter) {
-        return new StepBuilder("regexLogStep", jobRepository)
+    public Step regexFlatItemReaderStep(FlatFileItemReader<LogEntry> regexFlatItemReader) {
+        return new StepBuilder("regexFlatItemReaderStep", jobRepository)
                 .<LogEntry, LogEntry>chunk(10, transactionManager)
-                .reader(regexLogItemReader)
-                .writer(regexLogItemWriter)
+                .reader(regexFlatItemReader)
+                .writer(regexFlatItemWriter())
                 .build();
     }
 
     @Bean
     @StepScope
-    public FlatFileItemReader<LogEntry> regexLogItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
+    public FlatFileItemReader<LogEntry> regexFlatItemReader(@Value("#{jobParameters['filePath']}") String filePath) {
         /*
         \\[\\\\w+\\]: 대괄호 안의 로그 레벨(예: WARNING, ERROR)을 패턴으로 매칭한다. 이 부분은 분석 대상에서 제외된다.
         \\[Thread-(\\\\d+)\\]: 스레드 번호에 해당하는 두 번째 대괄호 안에서 Thread- 뒤에 나오는 숫자가 첫 번째 그룹으로 캡처된다.
@@ -67,8 +67,7 @@ public class RegexLogBatchConfig {
                 .build();
     }
 
-    @Bean
-    public ItemWriter<LogEntry> regexLogItemWriter() {
+    public ItemWriter<LogEntry> regexFlatItemWriter() {
         return chunk -> chunk.forEach(item -> log.info("THD-{}: {}", item.getThreadNum(), item.getMessage()));
     }
 
