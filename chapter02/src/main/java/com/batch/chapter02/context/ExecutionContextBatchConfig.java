@@ -35,7 +35,7 @@ public class ExecutionContextBatchConfig {
     */
 
     @Bean
-    public Job exampleJob(JobRepository jobRepository, Step stepA, Step stepB) {
+    public Job contextJob(JobRepository jobRepository, Step stepA, Step stepB) {
         return new JobBuilder("contextJob", jobRepository)
                 .start(stepA)
                 .next(stepB)

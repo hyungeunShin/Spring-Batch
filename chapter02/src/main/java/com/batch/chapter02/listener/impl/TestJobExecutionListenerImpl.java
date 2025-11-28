@@ -3,10 +3,8 @@ package com.batch.chapter02.listener.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public class TestJobExecutionListenerImpl implements JobExecutionListener {
     @Override
     public void beforeJob(JobExecution jobExecution) {

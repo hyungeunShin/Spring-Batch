@@ -112,6 +112,8 @@ cd build/libs
 java -jar chapter02-0.0.1-SNAPSHOT.jar --spring.profiles.active=json --spring.batch.job.name=jsonJobParameterJob a='{\"value\":\"aaa,bbb\",\"type\":\"java.lang.String\"}'
 ```
 
+---
+
 ## JobParameterValidatorBatchConfig
 
 ```shell
@@ -128,4 +130,52 @@ java -jar chapter02-0.0.1-SNAPSHOT.jar --spring.profiles.active=json --spring.ba
 
 ```shell
 ./gradlew bootRun --args='--spring.batch.job.name=jobParameterValidatorJob2 a=10,java.lang.Long'
+```
+
+---
+
+## ExecutionContextBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=contextJob'
+```
+
+---
+
+## TestListenerBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=testListenerJob'
+```
+
+---
+
+## AdvancedListenerBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=advancedListenerJob'
+```
+
+---
+
+## PromotionListenerBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=promotionListenerJob'
+```
+
+---
+
+## JobParameterAndListenerBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=jobParameterAndListenerJob result=aaa,java.lang.String'
+```
+
+---
+
+## ExceptionListenerBatchConfig
+
+```shell
+./gradlew bootRun --args='--spring.batch.job.name=exceptionListenerJob'
 ```

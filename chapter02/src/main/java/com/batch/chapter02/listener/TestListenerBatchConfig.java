@@ -21,8 +21,8 @@ public class TestListenerBatchConfig {
     @Bean
     public Job testListenerJob(JobRepository jobRepository, Step testListenerStep) {
         return new JobBuilder("testListenerJob", jobRepository)
-                .listener(new TestJobExecutionListenerImpl())
-                //.listener(new TestJobExecutionListenerAnno())
+                //.listener(new TestJobExecutionListenerImpl())
+                .listener(new TestJobExecutionListenerAnno())
                 .start(testListenerStep)
                 .build();
     }
@@ -30,8 +30,8 @@ public class TestListenerBatchConfig {
     @Bean
     public Step testListenerStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("testListenerStep", jobRepository)
-                .listener(new TestStepExecutionListenerImpl())
-                //.listener(new TestStepExecutionListenerAnno())
+                //.listener(new TestStepExecutionListenerImpl())
+                .listener(new TestStepExecutionListenerAnno())
                 .tasklet((contribution, chunkContext) -> {
                     log.info("testListenerStep");
                     return RepeatStatus.FINISHED;
